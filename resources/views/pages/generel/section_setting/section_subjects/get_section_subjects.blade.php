@@ -1,0 +1,115 @@
+@extends('layouts.master')
+@section('css')
+    <style>
+        a:hover {
+            color: white !important;
+            background-color: green;
+            transition: all 0.5s;
+        }
+    </style>
+    @toastr_css
+@section('title')
+    مواد الفصل
+@stop
+@endsection
+@section('page-header')
+<div class="title mb-3">
+    <div style="display: flex; justify-content: space-between;">
+        <nav class="navbar navbar-light bg-light p-2" style="justify-content: start;">
+            <a class="mx-2" style="font-size: 14px; text-decoration: underline" href="{{ route('generel') }}">السنوات
+                الدراسية</a>->
+            <a class="mx-2" style="font-size: 14px; text-decoration: underline"
+                href="{{ route('show_grades', session()->get('academicYear')) }}">{{ App\Models\AcademicYear::findOrFail(session()->get('academicYear'))->academicyear }}</a>->
+            <a class="mx-2" style="font-size: 14px; text-decoration: underline"
+                href="{{ route('show_classrooms', session()->get('grade')) }}">{{ App\Models\Grade::findOrFail(session()->get('grade'))->Name }}</a>->
+            <a class="mx-2" style="font-size: 14px; text-decoration: underline"
+                href="{{ route('show_terms', session()->get('classroom')) }}">{{ App\Models\Classroom::findOrFail(session()->get('classroom'))->Name_Class }}</a>->
+            <a class="mx-2" style="font-size: 14px; text-decoration: underline"
+                href="{{ route('show_sections', session()->get('term')) }}">{{ App\Models\Term::findOrFail(session()->get('term'))->name }}</a>->
+        </nav>
+        <a class="mx-2" style="font-size: 14px; text-decoration: underline;"
+            href="{{ route('show_term_subjects') }}">الرجوع للمواد</a>
+    </div>
+</div>
+<!-- breadcrumb -->
+@section('PageTitle')
+    مواد الفصل
+@stop
+<!-- breadcrumb -->
+@endsection
+@section('content')
+<!-- row -->
+<div class="row">
+
+
+    {{-- @if ($errors->any())
+        <div class="error">{{ $errors->first('Name') }}</div>
+    @endif --}}
+
+
+
+    <div class="col-xl-12 mb-30">
+        <div class="card card-statistics h-100">
+            <div class="card-body">
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <form action="{{ route('releatoin_term_subjects') }}" method="post">
+                    @csrf
+                    <div class="table-responsive">
+                        <table id="datatable" class="table  table-hover table-sm table-bordered p-0"
+                            data-page-length="50" style="text-align: center">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px"><input id="example-select-all"
+                                            type="checkbox" onclick="CheckAll('box1', this)" /></th>
+                                    <th>المادة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($subjects as $subject)
+                                    <tr>
+                                        <td><input type="checkbox" name="subjects[]" value="{{ $subject->id }}" class="box1"></td>
+                                        <td>
+                                            {{ $subject->name }}
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        <button type="submit" class="btn btn-success my-3" style="width: 100%">ربط</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- row closed -->
+@endsection
+@section('js')
+@toastr_js
+@toastr_render
+<script type="text/javascript">
+    $(function() {
+        $("#btn_delete_all").click(function() {
+            var selected = new Array();
+            $("#datatable input[type=checkbox]:checked").each(function() {
+                selected.push(this.value);
+            });
+
+            if (selected.length > 0) {
+                $('#delete_all').modal('show')
+                $('input[id="delete_all_id"]').val(selected);
+            }
+        });
+    });
+@endsection
