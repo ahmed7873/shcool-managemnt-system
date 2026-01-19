@@ -60,7 +60,9 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                {!! DNS2D::getBarcodeHTML((string) $Student->id, 'QRCODE',10,10,'green') !!}
+                                <div style="display: flex; justify-content: center; margin-top: 50px;">
+                                    {!! DNS2D::getBarcodeHTML((string) $Student->id, 'QRCODE',10,10,'black') !!}
+                                </div>
                             </div>
 
                             <div class="tab-pane fade" id="profile-02" role="tabpanel" aria-labelledby="profile-02-tab">

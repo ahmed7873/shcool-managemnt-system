@@ -10,4 +10,8 @@ class ReceiptStudent extends Model
     {
         return $this->belongsTo('App\Models\Student', 'student_id');
     }
+    public function invoice()
+    {
+        return $this->belongsTo(Fee_invoice::class, 'fee_invoice_id');
+    }
 }

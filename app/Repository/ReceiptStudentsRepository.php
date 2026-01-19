@@ -3,8 +3,7 @@
 
 namespace App\Repository;
 
-
-
+use App\Models\Fee_invoice;
 use App\Models\FundAccount;
 use App\Models\ReceiptStudent;
 use App\Models\Student;
@@ -25,13 +24,15 @@ class ReceiptStudentsRepository implements ReceiptStudentsRepositoryInterface
     public function show($id)
     {
         $student = Student::findorfail($id);
-        return view('pages.Receipt.add',compact('student'));
+        $invices = Fee_invoice::where('student_id', $id)->get();
+        return view('pages.Receipt.add',compact('student', 'invices'));
     }
 
     public function edit($id)
     {
         $receipt_student = ReceiptStudent::findorfail($id);
-        return view('pages.Receipt.edit',compact('receipt_student'));
+        $invices = Fee_invoice::where('student_id', $id)->get();
+        return view('pages.Receipt.edit',compact('receipt_student', 'invices'));
     }
 
     public function store($request)
@@ -44,6 +45,7 @@ class ReceiptStudentsRepository implements ReceiptStudentsRepositoryInterface
             $receipt_students = new ReceiptStudent();
             $receipt_students->date = date('Y-m-d');
             $receipt_students->student_id = $request->student_id;
+            $receipt_students->fee_invoice_id = $request->invoice_id;
             $receipt_students->Debit = $request->Debit;
             $receipt_students->description = $request->description;
             $receipt_students->save();
@@ -89,6 +91,7 @@ class ReceiptStudentsRepository implements ReceiptStudentsRepositoryInterface
             $receipt_students = ReceiptStudent::findorfail($request->id);
             $receipt_students->date = date('Y-m-d');
             $receipt_students->student_id = $request->student_id;
+            $receipt_students->fee_invoice_id = $request->invoice_id;
             $receipt_students->Debit = $request->Debit;
             $receipt_students->description = $request->description;
             $receipt_students->save();

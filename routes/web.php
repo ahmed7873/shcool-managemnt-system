@@ -4,6 +4,8 @@ use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ClassTableController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\Students\AttendanceController;
+use App\Http\Controllers\Students\FeesInvoicesController;
+use App\Http\Controllers\Students\ReceiptStudentsController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TermSubjectController;
 use Illuminate\Support\Facades\Route;
@@ -152,6 +154,7 @@ Route::group(
             Route::resource('Fees_Invoices', 'FeesInvoicesController');
             Route::resource('Fees', 'FeesController');
             Route::resource('receipt_students', 'ReceiptStudentsController');
+            Route::get('print_invoice/{id}', [ReceiptStudentsController::class, 'print_invoice'])->name('print_invoice');
             Route::resource('ProcessingFee', 'ProcessingFeeController');
             Route::resource('Payment_students', 'PaymentController');
             Route::resource('Attendance', 'AttendanceController');

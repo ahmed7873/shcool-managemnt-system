@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Students;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\ReceiptStudent;
+use App\Models\Setting;
 use App\Repository\ReceiptStudentsRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -17,7 +19,7 @@ class ReceiptStudentsController extends Controller
     }
     public function index()
     {
-      return $this->Receipt->index();
+        return $this->Receipt->index();
     }
 
 
@@ -35,7 +37,7 @@ class ReceiptStudentsController extends Controller
 
     public function show($id)
     {
-       return $this->Receipt->show($id);
+        return $this->Receipt->show($id);
     }
 
 
@@ -54,5 +56,14 @@ class ReceiptStudentsController extends Controller
     public function destroy(Request $request)
     {
         return $this->Receipt->destroy($request);
+    }
+    function print_invoice($id)
+    {
+        $recept = ReceiptStudent::findorfail($id);
+        $collection = Setting::all();
+        $setting['setting'] = $collection->flatMap(function ($collection) {
+            return [$collection->key => $collection->value];
+        });
+        return view('pages.Receipt.show', compact('recept', 'setting'));
     }
 }

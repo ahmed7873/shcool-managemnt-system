@@ -160,7 +160,7 @@
         </li>
 
         <!-- Attendance-->
-        <li>
+        {{-- <li>
             <a href="javascript:void(0);" data-toggle="collapse" data-target="#Attendance-icon">
                 <div class="pull-left"><i class="fas fa-calendar-alt"></i><span
                         class="right-nav-text">{{ trans('main_trans.Attendance') }}</span></div>
@@ -170,7 +170,7 @@
             <ul id="Attendance-icon" class="collapse" data-parent="#sidebarnav">
                 <li> <a href="{{ route('Attendance.index') }}">قائمة الطلاب</a> </li>
             </ul>
-        </li>
+        </li> --}}
 
         <!-- Subjects-->
         <li>
@@ -201,7 +201,7 @@
 
 
         <!-- library-->
-        <li>
+        {{-- <li>
             <a href="javascript:void(0);" data-toggle="collapse" data-target="#library-icon">
                 <div class="pull-left"><i class="fas fa-book"></i><span
                         class="right-nav-text">{{ trans('main_trans.library') }}</span></div>
@@ -211,11 +211,11 @@
             <ul id="library-icon" class="collapse" data-parent="#sidebarnav">
                 <li> <a href="{{ route('library.index') }}">قائمة الكتب</a> </li>
             </ul>
-        </li>
+        </li> --}}
 
 
         <!-- Online classes-->
-        <li>
+        {{-- <li>
             <a href="javascript:void(0);" data-toggle="collapse" data-target="#Onlineclasses-icon">
                 <div class="pull-left"><i class="fas fa-video"></i><span
                         class="right-nav-text">{{ trans('main_trans.Onlineclasses') }}</span></div>
@@ -225,7 +225,7 @@
             <ul id="Onlineclasses-icon" class="collapse" data-parent="#sidebarnav">
                 <li> <a href="{{ route('online_classes.index') }}">حصص اونلاين مع زوم</a> </li>
             </ul>
-        </li>
+        </li> --}}
 
 
         <!-- Settings-->
@@ -243,7 +243,7 @@
 
 
         <!-- Users-->
-        <li>
+        {{-- <li>
             <a href="javascript:void(0);" data-toggle="collapse" data-target="#Users-icon">
                 <div class="pull-left"><i class="fas fa-users"></i><span
                         class="right-nav-text">{{ trans('main_trans.Users') }}</span></div>
@@ -255,7 +255,7 @@
                 <li> <a href="themify-icons.html">Themify icons</a> </li>
                 <li> <a href="weather-icon.html">Weather icons</a> </li>
             </ul>
-        </li>
+        </li> --}}
 
     </ul>
 </div>

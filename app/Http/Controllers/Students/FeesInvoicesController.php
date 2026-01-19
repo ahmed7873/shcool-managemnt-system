@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Students;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fee_invoice;
+use App\Models\Setting;
 use App\Repository\FeeInvoicesRepositoryInterface;
 use Illuminate\Http\Request;
 

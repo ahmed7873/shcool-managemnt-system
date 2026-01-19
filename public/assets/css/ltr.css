@@ -6650,7 +6650,7 @@ a.text-dark:focus, a.text-dark:hover {
 .invisible {
   visibility: hidden !important; }
 
-@media print {
+/* @media print {
   *, ::after, ::before {
     text-shadow: none !important;
     box-shadow: none !important; }
@@ -6687,7 +6687,7 @@ a.text-dark:focus, a.text-dark:hover {
   .table td, .table th {
     background-color: #fff !important; }
   .table-bordered td, .table-bordered th {
-    border: 1px solid #ddd !important; } }
+    border: 1px solid #ddd !important; } } */
 
 /*# sourceMappingURL=bootstrap.min.css.map */
 /*!
@@ -21061,11 +21061,31 @@ footer a {
 
 /*print*/
 @media print {
-  .sidebar, footer, .admin-header, .page-title, #back-to-top {
-    display: none !important; }
+
+  .sidebar,
+  footer,
+  .admin-header,
+  #back-to-top,
+  #page-title,
+  #sidbar {
+    display: none !important;
+  }
+
   .content-wrapper {
     width: 100% !important;
-    margin-left: 0; } }
+    margin-left: 0;
+  }
+
+  #content {
+    width: 100% !important;
+  }
+
+  * {
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+}
 
 /*morris cart */
 .morris-hover {

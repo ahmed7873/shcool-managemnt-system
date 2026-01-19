@@ -1,7 +1,7 @@
-<div class="container-fluid">
+<div class="container-fluid" style="background-color: red">
     <div class="row">
         <!-- Left Sidebar start-->
-        <div class="side-menu-fixed">
+        <div class="side-menu-fixed" id="sidbar">
 
             @if (auth('web')->check())
                 @include('layouts.main-sidebar.admin-main-sidebar')
