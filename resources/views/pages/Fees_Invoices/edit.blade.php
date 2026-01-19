@@ -39,12 +39,6 @@
                                 <input type="hidden" value="{{$fee_invoices->id}}" name="id" class="form-control">
                             </div>
 
-
-                            <div class="form-group col">
-                                <label for="inputEmail4">المبلغ</label>
-                                <input type="number" value="{{$fee_invoices->amount}}" name="amount" class="form-control">
-                            </div>
-
                         </div>
 
 

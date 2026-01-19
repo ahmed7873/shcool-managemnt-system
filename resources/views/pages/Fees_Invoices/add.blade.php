@@ -58,18 +58,6 @@
                                                 </div>
 
                                                 <div class="col">
-                                                    <label for="Name_en" class="mr-sm-2">المبلغ</label>
-                                                    <div class="box">
-                                                        <select class="fancyselect" name="amount" required>
-                                                            <option value="">-- اختار من القائمة --</option>
-                                                            @foreach($fees as $fee)
-                                                                <option value="{{ $fee->amount }}">{{ $fee->amount }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col">
                                                     <label for="description" class="mr-sm-2">البيان</label>
                                                     <div class="box">
                                                         <input type="text" class="form-control" name="description" required>

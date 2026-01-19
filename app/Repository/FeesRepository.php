@@ -3,7 +3,7 @@
 
 namespace App\Repository;
 
-
+use App\Models\AcademicYear;
 use App\Models\Fee;
 use App\Models\Grade;
 
@@ -19,16 +19,15 @@ class FeesRepository implements FeesRepositoryInterface
     }
 
     public function create(){
-
-        $Grades = Grade::all();
-        return view('pages.Fees.add',compact('Grades'));
+        $academicYears = AcademicYear::all();
+        return view('pages.Fees.add',compact('academicYears'));
     }
 
     public function edit($id){
 
         $fee = Fee::findorfail($id);
-        $Grades = Grade::all();
-        return view('pages.Fees.edit',compact('fee','Grades'));
+        $academicYears = AcademicYear::all();
+        return view('pages.Fees.edit',compact('fee','academicYears'));
 
     }
 
@@ -40,10 +39,8 @@ class FeesRepository implements FeesRepositoryInterface
             $fees = new Fee();
             $fees->title = ['en' => $request->title_en, 'ar' => $request->title_ar];
             $fees->amount  =$request->amount;
-            $fees->Grade_id  =$request->Grade_id;
-            $fees->Classroom_id  =$request->Classroom_id;
             $fees->description  =$request->description;
-            $fees->year  =$request->year;
+            $fees->academicyear_id  =$request->academicyear_id;
             $fees->Fee_type  =$request->Fee_type;
             $fees->save();
             toastr()->success(trans('messages.success'));
@@ -62,10 +59,8 @@ class FeesRepository implements FeesRepositoryInterface
             $fees = Fee::findorfail($request->id);
             $fees->title = ['en' => $request->title_en, 'ar' => $request->title_ar];
             $fees->amount  =$request->amount;
-            $fees->Grade_id  =$request->Grade_id;
-            $fees->Classroom_id  =$request->Classroom_id;
             $fees->description  =$request->description;
-            $fees->year  =$request->year;
+            $fees->academicyear_id  =$request->academicyear_id;
             $fees->Fee_type  =$request->Fee_type;
             $fees->save();
             toastr()->success(trans('messages.Update'));

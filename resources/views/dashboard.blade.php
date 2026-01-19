@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                             <p class="text-muted pt-3 mb-0 mt-2 border-top">
-                                <i class="fas fa-binoculars mr-1" aria-hidden="true"></i><a href="{{route('Sections.index')}}" target="_blank"><span class="text-danger">عرض البيانات</span></a>
+                                <i class="fas fa-binoculars mr-1" aria-hidden="true"></i><a href="#" target="_blank"><span class="text-danger">عرض البيانات</span></a>
                             </p>
                         </div>
                     </div>

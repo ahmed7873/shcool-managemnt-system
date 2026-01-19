@@ -60,6 +60,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                {!! DNS2D::getBarcodeHTML((string) $Student->id, 'QRCODE',10,10,'green') !!}
                             </div>
 
                             <div class="tab-pane fade" id="profile-02" role="tabpanel" aria-labelledby="profile-02-tab">

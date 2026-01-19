@@ -53,31 +53,12 @@
                         <div class="form-row">
 
                             <div class="form-group col">
-                                <label for="inputState">المرحلة الدراسية</label>
-                                <select class="custom-select mr-sm-2" name="Grade_id">
+                                <label for="inputState">السنة الدراسية</label>
+                                <select class="custom-select mr-sm-2" name="academicyear_id">
                                     <option selected disabled>{{trans('Parent_trans.Choose')}}...</option>
-                                    @foreach($Grades as $Grade)
-                                        <option value="{{ $Grade->id }}">{{ $Grade->Name }}</option>
+                                    @foreach($academicYears as $academicYear)
+                                        <option value="{{ $academicYear->id }}">{{ $academicYear->academicyear }}</option>
                                     @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group col">
-                                <label for="inputZip">الصف الدراسي</label>
-                                <select class="custom-select mr-sm-2" name="Classroom_id">
-
-                                </select>
-                            </div>
-                            <div class="form-group col">
-                                <label for="inputZip">السنة الدراسية</label>
-                                <select class="custom-select mr-sm-2" name="year">
-                                    <option selected disabled>{{trans('Parent_trans.Choose')}}...</option>
-                                    @php
-                                        $current_year = date("Y")
-                                    @endphp
-                                    @for($year=$current_year; $year<=$current_year +1 ;$year++)
-                                        <option value="{{ $year}}">{{ $year }}</option>
-                                    @endfor
                                 </select>
                             </div>
 

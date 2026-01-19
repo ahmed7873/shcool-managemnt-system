@@ -26,4 +26,9 @@ class Fee extends Model
     {
         return $this->belongsTo('App\Models\Classroom', 'Classroom_id');
     }
+
+    public function academicyear()
+    {
+        return $this->belongsTo(AcademicYear::class, 'academicyear_id');
+    }
 }

@@ -56,31 +56,22 @@
                         <div class="form-row">
 
                             <div class="form-group col">
-                                <label for="inputState">المرحلة الدراسية</label>
-                                <select class="custom-select mr-sm-2" name="Grade_id">
-                                    @foreach($Grades as $Grade)
-                                        <option value="{{ $Grade->id }}" {{$Grade->id == $fee->Grade_id ? 'selected' : ""}}>{{ $Grade->Name }}</option>
+                                <label for="inputState">السنة الدراسية</label>
+                                <select class="custom-select mr-sm-2" name="academicyear_id">
+                                    @foreach($academicYears as $academicYear)
+                                        <option value="{{ $academicYear->id }}" {{$academicYear->id == $fee->academicyear_id ? 'selected' : ""}}>{{ $academicYear->academicyear }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div class="form-group col">
-                                <label for="inputZip">الصف الدراسي</label>
-                                <select class="custom-select mr-sm-2" name="Classroom_id">
-                                    <option value="{{$fee->Classroom_id}}">{{$fee->classroom->Name_Class}}</option>
+                                <label for="inputZip">نوع الرسوم</label>
+                                <select class="custom-select mr-sm-2" name="Fee_type">
+                                    <option value="1" {{$fee->Fee_type == 1 ? 'selected' : ""}}>رسوم دراسية</option>
+                                    <option value="2" {{$fee->Fee_type == 2 ? 'selected' : ""}}>رسوم باص</option>
                                 </select>
                             </div>
-                            <div class="form-group col">
-                                <label for="inputZip">السنة الدراسية</label>
-                                <select class="custom-select mr-sm-2" name="year">
-                                    @php
-                                        $current_year = date("Y")
-                                    @endphp
-                                    @for($year=$current_year; $year<=$current_year +1 ;$year++)
-                                        <option value="{{ $year}}" {{$year == $fee->year ? 'selected' : ' '}}>{{ $year }}</option>
-                                    @endfor
-                                </select>
-                            </div>
+                            
                         </div>
 
                         <div class="form-group">

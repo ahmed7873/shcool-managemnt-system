@@ -17,10 +17,9 @@ class CreateFeesTable extends Migration
             $table->id();
             $table->string('title');
             $table->decimal('amount',8,2);
-            $table->foreignId('Grade_id')->references('id')->on('grades')->onDelete('cascade');
-            $table->foreignId('Classroom_id')->references('id')->on('classrooms')->onDelete('cascade');
+            $table->unsignedBigInteger('academicyear_id');
+            $table->foreign('academicyear_id')->references('id')->on('academic_years')->cascadeOnDelete();
             $table->string('description')->nullable();
-            $table->string('year');
             $table->integer('Fee_type');
             $table->timestamps();
         });

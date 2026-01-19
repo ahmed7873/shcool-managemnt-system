@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Traits\AttachFilesTrait;
+use App\Models\AcademicYear;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class SettingController extends Controller
         $setting['setting'] = $collection->flatMap(function ($collection) {
             return [$collection->key => $collection->value];
         });
-        return view('pages.setting.index', $setting);
+        $academicYears = AcademicYear::all();
+        return view('pages.setting.index', compact('setting', 'academicYears'));
     }
 
     public function update(Request $request){

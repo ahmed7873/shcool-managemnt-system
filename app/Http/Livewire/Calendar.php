@@ -12,7 +12,7 @@ class Calendar extends Component
 
     public function getevent()
     {
-        $events = Event::select('id','title','start')->get();
+        $events = Event::select('id', 'title', 'start')->get();
 
         return  json_encode($events);
     }
@@ -36,11 +36,14 @@ class Calendar extends Component
      *
      * @return response()
      */
-    public function eventDrop($event, $oldEvent)
+    public function eventDrop($event)
     {
         $eventdata = Event::find($event['id']);
-        $eventdata->start = $event['start'];
-        $eventdata->save();
+
+        if ($eventdata) {
+            $eventdata->start = $event['start'];
+            $eventdata->save();
+        }
     }
 
     /**
@@ -50,7 +53,7 @@ class Calendar extends Component
      */
     public function render()
     {
-        $events = Event::select('id','title','start')->get();
+        $events = Event::select('id', 'title', 'start')->get();
 
         $this->events = json_encode($events);
 
