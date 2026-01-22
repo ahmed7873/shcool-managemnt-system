@@ -77,7 +77,7 @@
 
                         <input class="form-control date" type="text" id="datepicker-action" name="date"
                             data-date-format="yyyy-mm-dd"
-                            @if ($date != null && $subjectId != null) value="{{ $date }}"
+                            @if ($date != null && $subjectId != null && $luctureNumber != null) value="{{ $date }}"
             @else 
             value="<?php echo date('Y-m-d'); ?>" @endif>
                         <select style="width: 20%;" name="subject" id="subject" class="form-select my-3"
@@ -85,11 +85,14 @@
                             <option value="" selected>المادة</option>
                             @foreach ($subjects as $subject)
                                 <option
-                                    @if ($date != null && $subjectId != null) {{ $subjectId == $subject->id ? 'selected' : '' }} @endif
+                                    @if ($date != null && $subjectId != null && $luctureNumber != null) {{ $subjectId == $subject->id ? 'selected' : '' }} @endif
                                     value="{{ $subject->id }}">
                                     {{ $subject->name }}</option>
                             @endforeach
                         </select>
+                        <label for="date">رقم المحاضرة</label>
+                        <input @if ($date != null && $subjectId != null && $luctureNumber != null) value="{{ $luctureNumber }}" @endif
+                            class="form-control lucture_number" type="number" name="lucture_number">
                         <a href="{{ route('createAttendenceExpect') }}" id="updateRoute"
                             class="btn btn-primary">تحديث</a>
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete">
@@ -117,10 +120,10 @@
                                         <td scope="col">
 
                                             <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
-                                                <input name="attendences[{{ $student->id }}]"
-                                                    class="leading-tight" type="radio" value="1"
-                                                    @if ($date != null && $subjectId != null) @if (isset(
-                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state == 1? 'checked': '' }} @endif
+                                                <input name="attendences[{{ $student->id }}]" class="leading-tight"
+                                                    type="radio" value="1"
+                                                    @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
+                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 1? 'checked': '' }} @endif
                                                     @endif
                                                 >
                                                 <span class="text-success">حضور</span>
@@ -129,8 +132,8 @@
                                             <label class="ml-4 block text-gray-500 font-semibold">
                                                 <input name="attendences[{{ $student->id }}]" class="leading-tight"
                                                     type="radio" value="0"
-                                                    @if ($date != null && $subjectId != null) @if (isset(
-                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state == 0? 'checked': '' }} @endif
+                                                    @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
+                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 0? 'checked': '' }} @endif
                                                     @endif
                                                 >
                                                 <span class="text-danger">غياب</span>
@@ -139,8 +142,8 @@
                                             <label class="ml-4 block text-gray-500 font-semibold">
                                                 <input name="attendences[{{ $student->id }}]" class="leading-tight"
                                                     type="radio" value="2"
-                                                    @if ($date != null && $subjectId != null) @if (isset(
-                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state == 2? 'checked': '' }} @endif
+                                                    @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
+                                                            $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 2? 'checked': '' }} @endif
                                                     @endif
                                                 >
                                                 <span class="text-warning">متأخر</span>
@@ -150,10 +153,10 @@
                                         <td scope="col">
                                             <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
                                                 <textarea style="width: 300px;" name="notes[{{ $student->id }}]" id="{{ $student->id }}">
-                                        @if ($date != null && $subjectId != null)
+                                        @if ($date != null && $subjectId != null && $luctureNumber != null)
                                             @if (isset(
-                                                    $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->state))
-                                            {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->first()->notes }}
+                                                    $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state))
+                                            {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->notes }}
                                             @endif
                                         @endif
                                     </textarea>
@@ -185,6 +188,8 @@
                                         id="model-date" aria-describedby="emailHelp">
                                     <input type="hidden" readonly name="subject" class="form-control red"
                                         id="model-subject" aria-describedby="emailHelp">
+                                    <input type="hidden" readonly name="lucture_number" class="form-control red"
+                                        id="model-lucture_number" aria-describedby="emailHelp">
                                 </div>
                                 <button type="submit" class="btn btn-outline-danger">حذف</button>
                             </form>
@@ -207,29 +212,34 @@
 <script>
     const dateInput = document.querySelector('.date');
     const subjectSelect = document.getElementById('subject');
+    const lucture_number = document.querySelector('.lucture_number');
     const link = document.getElementById('updateRoute');
 
     function updateLink() {
         const date = dateInput.value;
         const subjectId = subjectSelect.value;
+        const lucture_number2 = lucture_number.value;
 
         // Only build URL when both values exist
-        if (date && isNumber(parseInt(subjectId))) {
-            link.href = `/createAttendenceExpect/${date}/${subjectId}`;
+        if (date && isNumber(parseInt(subjectId)) && isNumber(parseInt(lucture_number2))) {
+            link.href = `/createAttendenceExpect/${date}/${subjectId}/${lucture_number2}`;
             document.querySelector('#model-body').textContent = "التاريخ:" + date + "المادة:" + subjectSelect.options[
-                subjectSelect.selectedIndex].text;
+                subjectSelect.selectedIndex].text + "المحاضرة: " + lucture_number2;
             document.querySelector('#model-date').value = date;
             document.querySelector('#model-subject').value = subjectId;
+            document.querySelector('#model-lucture_number').value = lucture_number2;
         } else {
             link.href = `/createAttendenceExpect`;
             document.querySelector('#model-body').textContent = "اختر التاريخ والمادة";
             document.querySelector('#model-date').value = null;
             document.querySelector('#model-subject').value = null;
+            document.querySelector('#model-lucture_number').value = null;
         }
     }
 
     dateInput.addEventListener('change', updateLink);
     subjectSelect.addEventListener('change', updateLink);
+    lucture_number.addEventListener('change', updateLink);
 
     function isNumber(value) {
         return typeof value === 'number' && !isNaN(value);

@@ -68,12 +68,14 @@
                     </div>
                 @endif
 
-                <h1 class="text-center">تحضير المادة {{ App\Models\Subject::findOrFail($subject)->name }}</h1>
+                <h1 class="text-center">تحضير المادة {{ App\Models\Subject::findOrFail($classTable->subject_id)->name }} المحاضرة رقم {{ $classTable->lucture_number }}</h1>
                 <br><br>
 
                 <form action="{{ route('store_attendance') }}" method="post">
                     @csrf
-                    <input type="hidden" name="subject" value="{{ $subject }}">
+                    <input type="hidden" name="subject" value="{{ $classTable->subject_id }}">
+                    <input type="hidden" name="lucture_number" value="{{ $classTable->lucture_number }}">
+                    <input type="hidden" name="class_table_id" value="{{ $classTable->id }}">
                     <div class="table-responsive">
                         <table id="datatable" class="table  table-hover table-sm table-bordered p-0"
                             data-page-length="50" style="text-align: center">
@@ -97,7 +99,7 @@
                                                 <input name="attendences[{{ $sectionStudent->id }}]" checked
                                                     class="leading-tight" type="radio" value="1"
                                                     @if (isset(
-                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state == 1? 'checked': '' }} @endif>
+                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state == 1? 'checked': '' }} @endif>
                                                 <span class="text-success">حضور</span>
                                             </label>
 
@@ -105,7 +107,7 @@
                                                 <input name="attendences[{{ $sectionStudent->id }}]"
                                                     class="leading-tight" type="radio" value="0"
                                                     @if (isset(
-                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state == 0? 'checked': '' }} @endif>
+                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state == 0? 'checked': '' }} @endif>
                                                 <span class="text-danger">غياب</span>
                                             </label>
 
@@ -113,7 +115,7 @@
                                                 <input name="attendences[{{ $sectionStudent->id }}]"
                                                     class="leading-tight" type="radio" value="2"
                                                     @if (isset(
-                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state == 2? 'checked': '' }} @endif>
+                                                            $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state)) {{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state == 2? 'checked': '' }} @endif>
                                                 <span class="text-warning">متأخر</span>
                                             </label>
                                             {{-- @endif --}}
@@ -122,8 +124,8 @@
                                             <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
                                                 <textarea style="width: 300px;" name="notes[{{ $sectionStudent->id }}]" id="{{ $sectionStudent->id }}">
                                         @if (isset(
-                                                $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->state))
-{{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subject)->first()->notes }}
+                                                $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->state))
+{{ $sectionStudent->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $classTable->subject_id)->where('lucture_number', $classTable->lucture_number)->first()->notes }}
 @endif
                                     </textarea>
                                             </label>

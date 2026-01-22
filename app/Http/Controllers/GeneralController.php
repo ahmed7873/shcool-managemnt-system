@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ExammRequest;
 use App\Models\AcademicYear;
+use App\Models\Attendance;
 use App\Models\Classroom;
+use App\Models\ClassTable;
 use App\Models\Degree;
 use App\Models\Grade;
 use App\Models\Quizze;
 use App\Models\Section;
+use App\Models\Setting;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\teacher_subject;
@@ -194,5 +197,66 @@ class GeneralController extends Controller
             }
         }
         return redirect()->route('get_sections_marks', $request->subject);
+    }
+    // baracode store
+    function baracoe()
+    {
+        $collection = Setting::all();
+        $setting['setting'] = $collection->flatMap(function ($collection) {
+            return [$collection->key => $collection->value];
+        });
+        return view('pages.baracode.baracode', compact('setting'));
+    }
+    function baracoe_store(Request $request)
+    {
+        $request->validate([
+            'student_id' => ['required', 'exists:students,id']
+        ]);
+        $student = Student::findOrFail($request->student_id);
+        $collection = Setting::all();
+        $setting['setting'] = $collection->flatMap(function ($collection) {
+            return [$collection->key => $collection->value];
+        });
+        foreach ($student->sections as $section) {
+            if ($section->term->academicyear_id == $setting['setting']['current_session']) {
+                $sectionSubjects = [];
+                if (date('D') == 'Sun') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 2)->get();
+                } else if (date('D') == 'Mon') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 3)->get();
+                } else if (date('D') == 'Tue') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 4)->get();
+                } else if (date('D') == 'Wed') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 6)->get();
+                } else if (date('D') == 'Thu') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 5)->get();
+                } else if (date('D') == 'Sat') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 1)->get();
+                } else if (date('D') == 'Fri') {
+                    $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 7)->get();
+                }
+                foreach ($sectionSubjects as $subject) {
+                    $attendance = Attendance::where('student_id', $request->student_id)
+                        ->where('section_id', $section->id)
+                        ->where('subject_id', $subject->subject_id)
+                        ->where('lucture_number', $subject->lucture_number)
+                        ->where('attendance_date', date("Y-m-d"))->get();
+
+                    if ($attendance->count() > 0) {
+                    } else {
+                        $newAttendance = new Attendance();
+                        $newAttendance->student_id = $request->student_id;
+                        $newAttendance->section_id = $section->id;
+                        $newAttendance->subject_id = $subject->subject_id;
+                        $newAttendance->lucture_number = $subject->lucture_number;
+                        $newAttendance->attendance_date = date("Y-m-d");
+                        $newAttendance->state = 1;
+                        $newAttendance->save();
+                    }
+                }
+            }
+        }
+        toastr()->success("تم التحضير " . $student->name);
+        return redirect()->route('baracoe');
     }
 }

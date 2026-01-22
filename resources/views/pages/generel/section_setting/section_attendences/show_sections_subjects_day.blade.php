@@ -56,7 +56,7 @@
                 <h1 class="text-center">مواد اليوم</h1>
                 <div class="row" style="justify-content: center">
                     @foreach ($sectionSubjects as $subject)
-                        <a href="{{ route('create_attendance', $subject->subject->id) }}"
+                        <a href="{{ route('create_attendance', $subject->id) }}"
                             class="btn btn-primary col-3 m-1 p-2 text-center">{{ $subject->subject->name }}</a>
                     @endforeach
                     <a href="{{ route('createAttendenceExpect') }}" class="btn btn-warning col-3 m-1 p-2 text-center">تحضير استثنائي</a>

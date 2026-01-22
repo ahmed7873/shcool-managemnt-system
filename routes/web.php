@@ -25,6 +25,9 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 //Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('selection');
+Route::get('/baracoe', [GeneralController::class, 'baracoe'])->name('baracoe');
+
+Route::post('/baracoe_store', [GeneralController::class, 'baracoe_store'])->name('baracoe_store');
 
 Route::group(['namespace' => 'Auth'], function () {
 
@@ -58,7 +61,7 @@ Route::group(
             //==============================section attendance============================
             Route::get('/show_section_subjects_day', [AttendanceController::class, 'show_section_subjects_day'])->name('show_section_subjects_day');
             Route::get('create_attendance/{subject}', [AttendanceController::class, 'create_attendance'])->name('create_attendance');
-            Route::get('createAttendenceExpect/{date?}/{subjectId?}', [AttendanceController::class, 'createAttendenceExpect'])->name('createAttendenceExpect');
+            Route::get('createAttendenceExpect/{date?}/{subjectId?}/{luctureNumber?}', [AttendanceController::class, 'createAttendenceExpect'])->name('createAttendenceExpect');
             Route::post('attendenceDelete', [AttendanceController::class, 'attendenceDelete'])->name('attendenceDelete');
             Route::post('store_attendance', [AttendanceController::class, 'store_attendance'])->name('store_attendance');
             Route::post('storeAttendenceExpect', [AttendanceController::class, 'storeAttendenceExpect'])->name('storeAttendenceExpect');

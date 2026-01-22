@@ -22,6 +22,7 @@ class CreateAttendancesTable extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->date('attendance_date');
+            $table->integer('lucture_number');
             $table->integer('state');
             $table->text('notes')->nullable();
             $table->timestamps();

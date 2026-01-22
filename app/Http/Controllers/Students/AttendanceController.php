@@ -83,7 +83,8 @@ class AttendanceController extends Controller
     public function create_attendance($subject)
     {
         $sectionStudents = Section::findOrFail(session()->get('section'))->students;
-        return view('pages.generel.section_setting.section_attendences.get_section_attendace', compact('sectionStudents', 'subject'));
+        $classTable = ClassTable::findOrFail($subject);
+        return view('pages.generel.section_setting.section_attendences.get_section_attendace', compact('sectionStudents', 'classTable'));
     }
 
     /**
@@ -95,12 +96,14 @@ class AttendanceController extends Controller
             $attendance = Attendance::where('student_id', $student_id)
                 ->where('section_id', session()->get('section'))
                 ->where('subject_id', $request->subject)
+                ->where('lucture_number', $request->lucture_number)
                 ->where('attendance_date', date("Y-m-d"))->get();
 
             if ($attendance->count() > 0) {
                 $attendance[0]->student_id = $student_id;
                 $attendance[0]->section_id = session()->get('section');
                 $attendance[0]->subject_id = $request->subject;
+                $attendance[0]->lucture_number = $request->lucture_number;
                 $attendance[0]->attendance_date = date("Y-m-d");
                 $attendance[0]->state = $state;
                 $attendance[0]->notes = $request->notes[$student_id];
@@ -110,6 +113,7 @@ class AttendanceController extends Controller
                 $newAttendance->student_id = $student_id;
                 $newAttendance->section_id = session()->get('section');
                 $newAttendance->subject_id = $request->subject;
+                $newAttendance->lucture_number = $request->lucture_number;
                 $newAttendance->attendance_date = date("Y-m-d");
                 $newAttendance->state = $state;
                 $newAttendance->notes = $request->notes[$student_id];
@@ -117,14 +121,14 @@ class AttendanceController extends Controller
             }
         }
         toastr()->success('تم الحفظ بنجاح');
-        return redirect()->route('create_attendance', $request->subject);
+        return redirect()->route('create_attendance', $request->class_table_id);
     }
 
-    function createAttendenceExpect($date = null, $subjectId = null)
+    function createAttendenceExpect($date = null, $subjectId = null, $luctureNumber = null)
     {
         $subjects = Term::findOrFail(session()->get('term'))->subjects;
         $students = Section::findOrFail(session()->get('section'))->students;
-        return view('pages.generel.section_setting.section_attendences.get_section_expect_attendace', compact('subjects', 'students', 'date', 'subjectId'));
+        return view('pages.generel.section_setting.section_attendences.get_section_expect_attendace', compact('subjects', 'students', 'date', 'subjectId', 'luctureNumber'));
     }
 
     function storeAttendenceExpect(Request $request)
@@ -132,21 +136,25 @@ class AttendanceController extends Controller
         $request->validate(
             [
                 'subject' => ['required'],
+                'lucture_number' => ['required'],
             ],
             [
                 'subject.required' => 'اختر المادة',
+                'lucture_number.required' => 'اكتب رقم المحاضرة',
             ]
         );
         foreach ($request->attendences as $student_id => $state) {
             $attendance = Attendance::where('student_id', $student_id)
                 ->where('section_id', session()->get('section'))
                 ->where('subject_id', $request->subject)
+                ->where('lucture_number', $request->lucture_number)
                 ->where('attendance_date', $request->date)->get();
 
             if ($attendance->count() > 0) {
                 $attendance[0]->student_id = $student_id;
                 $attendance[0]->section_id = session()->get('section');
                 $attendance[0]->subject_id = $request->subject;
+                $attendance[0]->lucture_number = $request->lucture_number;
                 $attendance[0]->attendance_date = $request->date;
                 $attendance[0]->state = $state;
                 $attendance[0]->notes = $request->notes[$student_id];
@@ -156,6 +164,7 @@ class AttendanceController extends Controller
                 $newAttendance->student_id = $student_id;
                 $newAttendance->section_id = session()->get('section');
                 $newAttendance->subject_id = $request->subject;
+                $newAttendance->lucture_number = $request->lucture_number;
                 $newAttendance->attendance_date = $request->date;
                 $newAttendance->state = $state;
                 $newAttendance->notes = $request->notes[$student_id];
@@ -166,6 +175,7 @@ class AttendanceController extends Controller
         return redirect()->route('createAttendenceExpect', [
             'date'    => $request->date,
             'subjectId' => $request->subject,
+            'luctureNumber' => $request->lucture_number,
         ]);
     }
 
@@ -174,12 +184,16 @@ class AttendanceController extends Controller
         $request->validate(
             [
                 'subject' => ['required'],
+                'lucture_number' => ['required'],
             ],
             [
                 'subject.required' => 'اختر المادة',
+                'lucture_number.required' => 'اكتب رقم المحاضرة',
             ]
         );
-        Attendance::where('section_id', session()->get('section'))->where('subject_id', $request->subject)
+        Attendance::where('section_id', session()->get('section'))
+            ->where('subject_id', $request->subject)
+            ->where('lucture_number', $request->lucture_number)
             ->where('attendance_date', $request->date)->delete();
         return redirect()->route('createAttendenceExpect');
     }
