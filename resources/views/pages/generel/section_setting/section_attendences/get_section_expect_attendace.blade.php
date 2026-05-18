@@ -107,6 +107,7 @@
                                     <th>#</th>
                                     <th scope="col">الطالب</th>
                                     <th scope="col">الحالة</th>
+                                    <th scope="col">بعذر/بدون غذر</th>
                                     <th scope="col">ملاحظات</th>
                                 </tr>
                             </thead>
@@ -120,8 +121,9 @@
                                         <td scope="col">
 
                                             <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
-                                                <input name="attendences[{{ $student->id }}]" class="leading-tight"
-                                                    type="radio" value="1"
+                                                <input name="attendences[{{ $student->id }}]"
+                                                    class="leading-tight attendance-radio" type="radio" value="1"
+                                                    data-student="{{ $student->id }}"
                                                     @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
                                                             $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 1? 'checked': '' }} @endif
                                                     @endif
@@ -130,8 +132,9 @@
                                             </label>
 
                                             <label class="ml-4 block text-gray-500 font-semibold">
-                                                <input name="attendences[{{ $student->id }}]" class="leading-tight"
-                                                    type="radio" value="0"
+                                                <input name="attendences[{{ $student->id }}]"
+                                                    class="leading-tight attendance-radio" type="radio" value="0"
+                                                    data-student="{{ $student->id }}"
                                                     @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
                                                             $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 0? 'checked': '' }} @endif
                                                     @endif
@@ -140,8 +143,9 @@
                                             </label>
 
                                             <label class="ml-4 block text-gray-500 font-semibold">
-                                                <input name="attendences[{{ $student->id }}]" class="leading-tight"
-                                                    type="radio" value="2"
+                                                <input name="attendences[{{ $student->id }}]"
+                                                    class="leading-tight attendance-radio" type="radio" value="2"
+                                                    data-student="{{ $student->id }}"
                                                     @if ($date != null && $subjectId != null && $luctureNumber != null) @if (isset(
                                                             $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state)) {{ $student->attendance()->where('attendance_date', $date)->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->state == 2? 'checked': '' }} @endif
                                                     @endif
@@ -149,6 +153,25 @@
                                                 <span class="text-warning">متأخر</span>
                                             </label>
                                             {{-- @endif --}}
+                                        </td>
+                                        <td scope="col" id="uther-box-{{ $student->id }}">
+                                            <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
+                                                <input name="uther[{{ $student->id }}]"
+                                                    class="leading-tight uther-radio-{{ $student->id }}"
+                                                    type="radio" value="1"
+                                                    @if (isset(
+                                                            $student->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->uther)) {{ $student->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->uther == 1? 'checked': '' }} @endif>
+                                                <span class="text-success">بعذر</span>
+                                            </label>
+
+                                            <label class="ml-4 block text-gray-500 font-semibold">
+                                                <input name="uther[{{ $student->id }}]"
+                                                    class="leading-tight uther-radio-{{ $student->id }}"
+                                                    type="radio" value="0"
+                                                    @if (isset(
+                                                            $student->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->uther)) {{ $student->attendance()->where('attendance_date', date('Y-m-d'))->where('section_id', session()->get('section'))->where('subject_id', $subjectId)->where('lucture_number', $luctureNumber)->first()->uther == 0? 'checked': '' }} @endif>
+                                                <span class="text-danger">بدون عذر</span>
+                                            </label>
                                         </td>
                                         <td scope="col">
                                             <label class="block text-gray-500 font-semibold sm:border-r sm:pr-4">
@@ -172,8 +195,8 @@
                     </button>
                 </form>
             </div>
-            <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="delete" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -244,5 +267,46 @@
     function isNumber(value) {
         return typeof value === 'number' && !isNaN(value);
     }
+</script>
+<script>
+    function toggleUther(studentId, attendanceValue) {
+
+        let utherRadios = document.querySelectorAll(
+            '.uther-radio-' + studentId
+        );
+
+        if (attendanceValue == "0") {
+
+            // Enable
+            utherRadios.forEach(radio => {
+                radio.disabled = false;
+            });
+
+        } else {
+
+            // Disable + uncheck
+            utherRadios.forEach(radio => {
+                radio.disabled = true;
+                radio.checked = false;
+            });
+        }
+    }
+
+    // Listen for attendance change
+    document.querySelectorAll('.attendance-radio').forEach(radio => {
+
+        radio.addEventListener('change', function() {
+
+            let studentId = this.dataset.student;
+            let attendanceValue = this.value;
+
+            toggleUther(studentId, attendanceValue);
+        });
+
+        // Run on page load
+        if (radio.checked) {
+            toggleUther(radio.dataset.student, radio.value);
+        }
+    });
 </script>
 @endsection

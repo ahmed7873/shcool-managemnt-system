@@ -16,7 +16,8 @@ class StudentPromotionRepository implements StudentPromotionRepositoryInterface
     public function index()
     {
         $Grades = Grade::all();
-        return view('pages.Students.promotion.index',compact('Grades'));
+        $academicYears = \App\Models\AcademicYear::all();
+        return view('pages.Students.promotion.index',compact('Grades', 'academicYears'));
     }
 
     public function create()
@@ -31,7 +32,8 @@ class StudentPromotionRepository implements StudentPromotionRepositoryInterface
 
         try {
 
-            $students = student::where('Grade_id',$request->Grade_id)->where('Classroom_id',$request->Classroom_id)->where('section_id',$request->section_id)->where('academic_year',$request->academic_year)->get();
+            $old_section = \App\Models\Section::findOrFail($request->section_id);
+            $students = $old_section->students;
 
             if($students->count() < 1){
                 return redirect()->back()->with('error_promotions', __('لاتوجد بيانات في جدول الطلاب'));
@@ -40,14 +42,13 @@ class StudentPromotionRepository implements StudentPromotionRepositoryInterface
             // update in table student
             foreach ($students as $student){
 
-                $ids = explode(',',$student->id);
-                student::whereIn('id', $ids)
-                    ->update([
-                        'Grade_id'=>$request->Grade_id_new,
-                        'Classroom_id'=>$request->Classroom_id_new,
-                        'section_id'=>$request->section_id_new,
-                        'academic_year'=>$request->academic_year_new,
-                    ]);
+                // attach the new section with student
+                $student->sections()->syncWithoutDetaching([$request->section_id_new]);
+                
+                // update student academic year
+                $student->update([
+                    'academic_year_id' => $request->academic_year_new,
+                ]);
 
                 // insert in to promotions
                 Promotion::updateOrCreate([
@@ -88,13 +89,13 @@ class StudentPromotionRepository implements StudentPromotionRepositoryInterface
 
                  //التحديث في جدول الطلاب
                  $ids = explode(',',$Promotion->student_id);
-                 student::whereIn('id', $ids)
-                 ->update([
-                 'Grade_id'=>$Promotion->from_grade,
-                 'Classroom_id'=>$Promotion->from_Classroom,
-                 'section_id'=> $Promotion->from_section,
-                 'academic_year'=>$Promotion->academic_year,
-               ]);
+                 $students = \App\Models\Student::whereIn('id', $ids)->get();
+                 foreach ($students as $student) {
+                     $student->sections()->detach($Promotion->to_section);
+                     $student->update([
+                         'academic_year_id' => $Promotion->academic_year,
+                     ]);
+                 }
 
                  //حذف جدول الترقيات
                  Promotion::truncate();
@@ -109,13 +110,13 @@ class StudentPromotionRepository implements StudentPromotionRepositoryInterface
             else{
 
                 $Promotion = Promotion::findorfail($request->id);
-                student::where('id', $Promotion->student_id)
-                    ->update([
-                        'Grade_id'=>$Promotion->from_grade,
-                        'Classroom_id'=>$Promotion->from_Classroom,
-                        'section_id'=> $Promotion->from_section,
-                        'academic_year'=>$Promotion->academic_year,
+                $student = \App\Models\Student::find($Promotion->student_id);
+                if ($student) {
+                    $student->sections()->detach($Promotion->to_section);
+                    $student->update([
+                        'academic_year_id' => $Promotion->academic_year,
                     ]);
+                }
 
 
                 Promotion::destroy($request->id);

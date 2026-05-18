@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\AcademicYear;
 use App\Models\Classroom;
+use App\Models\Field;
 use App\Models\Gender;
 use App\Models\Grade;
 use App\Models\Image;
@@ -12,6 +13,7 @@ use App\Models\Nationalitie;
 use App\Models\Section;
 use App\Models\Student;
 use App\Models\Type_Blood;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -34,8 +36,13 @@ class StudentRepository implements StudentRepositoryInterface
         $data['nationals'] = Nationalitie::all();
         $data['bloods'] = Type_Blood::all();
         $data['academicYears'] = AcademicYear::all();
+        $fields = Field::all();
+
         $Students =  Student::findOrFail($id);
-        return view('pages.Students.edit', $data, compact('Students'));
+        $studentFields = $Students->fields
+            ->pluck('pivot.value', 'id')
+            ->toArray();
+        return view('pages.Students.edit', $data, compact('Students', 'studentFields', 'fields'));
     }
 
     public function Update_Student($request)
@@ -53,6 +60,19 @@ class StudentRepository implements StudentRepositoryInterface
             $Edit_Students->NoKnow = $request->no_know;
             $Edit_Students->parent_id = $request->parent_id;
             $Edit_Students->save();
+            $syncData = [];
+
+            if ($request->dynamic_fields) {
+
+                foreach ($request->dynamic_fields as $fieldId => $value) {
+
+                    $syncData[$fieldId] = [
+                        'value' => $value
+                    ];
+                }
+            }
+
+            $Edit_Students->fields()->sync($syncData);
             toastr()->success(trans('messages.Update'));
             return redirect()->route('Students.index');
         } catch (\Exception $e) {
@@ -63,19 +83,21 @@ class StudentRepository implements StudentRepositoryInterface
 
     public function Create_Student()
     {
-
         $data['parents'] = My_Parent::all();
         $data['Genders'] = Gender::all();
         $data['nationals'] = Nationalitie::all();
         $data['bloods'] = Type_Blood::all();
         $data['academicYears'] = AcademicYear::all();
+        $data['fields'] = Field::all();
         return view('pages.Students.add', $data);
     }
 
     public function Show_Student($id)
     {
         $Student = Student::findorfail($id);
-        return view('pages.Students.show', compact('Student'));
+        $encryptedId = Crypt::encryptString($Student->id);
+        $studentFields = $Student->fields;
+        return view('pages.Students.show', compact('Student', 'encryptedId', 'studentFields'));
     }
 
 
@@ -126,6 +148,16 @@ class StudentRepository implements StudentRepositoryInterface
                     $images->imageable_id = $students->id;
                     $images->imageable_type = 'App\Models\Student';
                     $images->save();
+                }
+            }
+
+            if ($request->dynamic_fields) {
+
+                foreach ($request->dynamic_fields as $fieldId => $value) {
+
+                    $students->fields()->attach($fieldId, [
+                        'value' => $value
+                    ]);
                 }
             }
             DB::commit(); // insert data

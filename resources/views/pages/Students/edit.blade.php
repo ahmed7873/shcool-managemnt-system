@@ -166,7 +166,20 @@
                                     class="form-control">
                             </div>
                         </div>
-                    </div><br>
+                    </div>
+                    @foreach ($fields as $field)
+                        <div class="mb-3">
+
+                            <label>{{ $field->name }}</label>
+
+                            <input type="{{ $field->type }}" name="dynamic_fields[{{ $field->id }}]"
+                                class="form-control"
+                                value="{{ old('dynamic_fields.' . $field->id, $studentFields[$field->id] ?? '') }}"
+                                {{ $field->is_required ? 'required' : '' }}>
+
+                        </div>
+                    @endforeach
+                    <br>
                     <button class="btn btn-success btn-sm nextBtn btn-lg pull-right"
                         type="submit">{{ trans('Students_trans.submit') }}</button>
                 </form>

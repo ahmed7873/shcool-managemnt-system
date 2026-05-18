@@ -6,10 +6,14 @@
             background-color: green;
             transition: all 0.5s;
         }
+
+        .nice-select.fancyselect {
+            width: 100%
+        }
     </style>
     @toastr_css
 @section('title')
-    الاقسام
+    مواد الفصل
 @stop
 @endsection
 @section('page-header')
@@ -30,12 +34,12 @@
                 href="{{ route('show_sections_settings', session()->get('section')) }}">{{ App\Models\Section::findOrFail(session()->get('section'))->Name_Section }}</a>
         </nav>
         <a class="mx-2" style="font-size: 14px; text-decoration: underline"
-            href="{{ route('show_sections_settings', session()->get('section')) }}">الرجوع للقسم</a>
+            href="{{ route('show_section_subjects') }}">الرجوع للمواد</a>
     </div>
 </div>
 <!-- breadcrumb -->
 @section('PageTitle')
-    الاقسام
+    مواد الفصل
 @stop
 <!-- breadcrumb -->
 @endsection
@@ -53,16 +57,13 @@
     <div class="col-xl-12 mb-30">
         <div class="card card-statistics h-100">
             <div class="card-body">
-                <div class="row" style="justify-content: center">
-                    @foreach ($subjects as $subject)
-                        <a href="{{ route('get_sections_marks_types', $subject) }}"
-                            class="btn btn-primary col-3 m-1 p-2 text-center">{{ $subject->name }}</a>
-                    @endforeach
-                </div>
+                <a href="{{ route('get_sections_marks', $subjectId) }}" class="btn btn-primary">المحصلة</a>
+                <a href="{{ route('get_sections_marks_final1', $subjectId) }}" class="btn btn-primary">الدور الاول</a>
+                <a href="{{ route('get_sections_marks_final2', $subjectId) }}" class="btn btn-primary">الدور الثني</a>
+                <a href="#" class="btn btn-primary">الدور التكميلي</a>
             </div>
         </div>
     </div>
-
 </div>
 <!-- row closed -->
 @endsection

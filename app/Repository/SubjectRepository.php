@@ -28,6 +28,7 @@ class SubjectRepository implements SubjectRepositoryInterface
         try {
             $subjects = new Subject();
             $subjects->name = ['en' => $request->Name_en, 'ar' => $request->Name_ar];
+            $subjects->hours = $request->hours;
             $subjects->save();
             toastr()->success(trans('messages.success'));
             return redirect()->route('subjects.create');
@@ -49,6 +50,7 @@ class SubjectRepository implements SubjectRepositoryInterface
         try {
             $subjects =  Subject::findorfail($request->id);
             $subjects->name = ['en' => $request->Name_en, 'ar' => $request->Name_ar];
+            $subjects->hours = $request->hours;
             $subjects->save();
             toastr()->success(trans('messages.Update'));
             return redirect()->route('subjects.create');

@@ -23,6 +23,17 @@
                 <li><a href="{{ route('academic_years') }}">السنوات الدراسية</a></li>
             </ul>
         </li>
+        <li>
+            <a href="javascript:void(0);" data-toggle="collapse" data-target="#feilds-menu">
+                <div class="pull-left"><i class="fas fa-school"></i><span class="right-nav-text">الحقول</span>
+                </div>
+                <div class="pull-right"><i class="ti-plus"></i></div>
+                <div class="clearfix"></div>
+            </a>
+            <ul id="feilds-menu" class="collapse" data-parent="#sidebarnav">
+                <li><a href="{{ route('dynamicFeilds.index') }}">الحقول</a></li>
+            </ul>
+        </li>
         <!-- Grades-->
         <li>
             <a href="javascript:void(0);" data-toggle="collapse" data-target="#Grades-menu">
@@ -125,6 +136,7 @@
             </a>
             <ul id="Teachers-menu" class="collapse" data-parent="#sidebarnav">
                 <li> <a href="{{ route('Teachers.index') }}">{{ trans('main_trans.List_Teachers') }}</a> </li>
+                <li> <a href="{{ route('createAttendenceTeachers') }}">التحضير</a> </li>
             </ul>
         </li>
 
@@ -227,6 +239,29 @@
             </ul>
         </li> --}}
 
+
+        <!-- Reports -->
+        <li>
+            <a href="javascript:void(0);" data-toggle="collapse" data-target="#reports-menu">
+                <div class="pull-left"><i class="fas fa-chart-pie"></i><span class="right-nav-text">التقارير</span>
+                </div>
+                <div class="pull-right"><i class="ti-plus"></i></div>
+                <div class="clearfix"></div>
+            </a>
+            <ul id="reports-menu" class="collapse" data-parent="#sidebarnav">
+                <li><a href="{{ route('Students.index') }}"><i class="fa fa-user"></i> تقرير طالب</a></li>
+                <li><a href="{{ route('section_marks_report') }}"><i class="fa fa-file-alt"></i> تقرير درجات شعبة</a>
+                </li>
+                <li><a href="{{ route('section_marks_custom_report') }}"><i class="fa fa-file-alt"></i> تقرير درجات
+                        شعبة مفصل</a></li>
+                <li><a href="{{ route('section_marks_appreciation_report') }}"><i class="fa fa-file-alt"></i> تقرير
+                        تقديرات الشعبة (النهائي 1)</a></li>
+                <li><a href="{{ route('section_marks_appreciation2_report') }}"><i class="fa fa-file-alt"></i> تقرير
+                        تقديرات الشعبة (النهائي 2)</a></li>
+                <li><a href="{{ route('section_marks_appreciation3_report') }}"><i class="fa fa-file-alt"></i> تقرير
+                        تقديرات الشعبة (النهائي 3)</a></li>
+            </ul>
+        </li>
 
         <!-- Settings-->
         <li>

@@ -93,7 +93,7 @@
                             </thead>
                             <tbody>
                                 <?php $i = 0; ?>
-                                @foreach ($sectionStudents as $sectionStudent)
+                                @foreach ($passedStudents as $sectionStudent)
                                     <tr>
                                         <?php $i++;
                                         $total = 0; ?>

@@ -148,6 +148,25 @@
                                                     </div>
                                                     <br>
                                                     <div class="col">
+                                                        <label for="type" class="control-label">نوع الاختبار</label>
+                                                        <select name="type" class="fancyselect"
+                                                            id="exampleFormControlSelect23">
+                                                            <option value="mohassalh"
+                                                                @if ($exam->type == 'mohassalh') selected @endif>مواصلة
+                                                            </option>
+                                                            <option value="final1"
+                                                                @if ($exam->type == 'final1') selected @endif>نهائي
+                                                                1</option>
+                                                            <option value="final2"
+                                                                @if ($exam->type == 'final2') selected @endif>نهائي
+                                                                2</option>
+                                                            <option value="final3"
+                                                                @if ($exam->type == 'final3') selected @endif>نهائي
+                                                                3</option>
+                                                        </select>
+                                                    </div>
+                                                    <br>
+                                                    <div class="col">
                                                         <label for="subject_id" class="control-label">المادة</label>
                                                         <select name="subject_id" class="fancyselect"
                                                             id="exampleFormControlSelect23">
@@ -249,7 +268,19 @@
                             <input value="0" type="number" class="form-control" name="full_mark">
                         </div>
                         <br>
-
+                        <div class="col">
+                            <label for="type" class="control-label">نوع الاختبار</label>
+                            <select name="type" class="fancyselect" id="exampleFormControlSelect53">
+                                <option value="mohassalh">محصلة
+                                </option>
+                                <option value="final1">نهائي
+                                    1</option>
+                                <option value="final2">نهائي
+                                    2</option>
+                                <option value="final3">نهائي
+                                    3</option>
+                            </select>
+                        </div><br>
                         <div class="col">
                             <label for="subject_id" class="control-label">المادة</label>
                             <select name="subject_id" class="fancyselect" id="exampleFormControlSelect23">

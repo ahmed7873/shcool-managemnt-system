@@ -24,6 +24,7 @@ class CreateAttendancesTable extends Migration
             $table->date('attendance_date');
             $table->integer('lucture_number');
             $table->integer('state');
+            $table->integer('uther')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });

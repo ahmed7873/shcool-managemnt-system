@@ -85,7 +85,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>الطالب</th>
-                                    @foreach ($exams as $exam)
+                                    @foreach ($exams2 as $exam)
                                         <th>{{ $exam->name }} من {{ $exam->full_mark }}</th>
                                     @endforeach
                                     <th>المجموع</th>
@@ -93,13 +93,13 @@
                             </thead>
                             <tbody>
                                 <?php $i = 0; ?>
-                                @foreach ($sectionStudents as $sectionStudent)
+                                @foreach ($passedStudents as $sectionStudent)
                                     <tr>
                                         <?php $i++;
                                         $total = 0; ?>
                                         <td>{{ $i }}</td>
                                         <td>{{ $sectionStudent->name }}</td>
-                                        @foreach ($exams as $exam)
+                                        @foreach ($exams2 as $exam)
                                             <td>
                                                 <input class="form-control text-center mark" type="number"
                                                     name="mark[{{ $sectionStudent->id }}][{{ $exam->id }}]"

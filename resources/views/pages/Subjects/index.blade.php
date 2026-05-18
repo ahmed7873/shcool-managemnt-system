@@ -30,6 +30,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>اسم المادة</th>
+                                            <th>عدد الساعات</th>
                                             <th>العمليات</th>
                                         </tr>
                                     </thead>
@@ -38,6 +39,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $subject->name }}</td>
+                                                <td>{{ $subject->hours }}</td>
                                                 <td>
                                                     <a href="{{ route('subjects.edit', $subject->id) }}"
                                                         class="btn btn-info btn-sm" role="button"

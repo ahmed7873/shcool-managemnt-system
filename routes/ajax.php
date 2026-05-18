@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,8 +13,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => 'auth:teacher,web'], function () {
-Route::get('/Get_classrooms/{id}', 'AjaxController@getClassrooms');
-Route::get('/Get_Sections/{id}', 'AjaxController@Get_Sections');
-});
 
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth']
+], function () {
+    Route::get('/Get_classrooms/{id}', 'AjaxController@getClassrooms');
+    Route::get('/Get_Sections/{id}', 'AjaxController@Get_Sections');
+});

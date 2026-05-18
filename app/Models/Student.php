@@ -63,4 +63,11 @@ class Student extends Authenticatable
     {
         return $this->belongsToMany(Section::class, 'section_students');
     }
+
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class)
+            ->withPivot('value')
+            ->withTimestamps();
+    }
 }

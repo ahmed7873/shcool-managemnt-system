@@ -45,6 +45,10 @@
                                     <label for="title">اسم المادة باللغة الانجليزية</label>
                                     <input type="text" name="Name_en" class="form-control">
                                 </div>
+                                <div class="col">
+                                    <label for="title">عدد الساعات</label>
+                                    <input type="number" name="hours" class="form-control">
+                                </div>
                             </div>
                             <br>
                             <button class="btn btn-success btn-sm nextBtn btn-lg pull-right" type="submit">حفظ

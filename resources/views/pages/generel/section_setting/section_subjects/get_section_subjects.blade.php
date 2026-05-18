@@ -68,19 +68,24 @@
                             data-page-length="50" style="text-align: center">
                             <thead>
                                 <tr>
-                                    <th style="width: 50px"><input id="example-select-all"
-                                            type="checkbox" onclick="CheckAll('box1', this)" /></th>
+                                    <th style="width: 50px"><input id="example-select-all" type="checkbox"
+                                            onclick="CheckAll('box1', this)" /></th>
                                     <th>المادة</th>
+                                    <th>الساعات الفعلية</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($subjects as $subject)
                                     <tr>
-                                        <td><input type="checkbox" name="subjects[]" value="{{ $subject->id }}" class="box1"></td>
+                                        <td><input type="checkbox" name="subjects[]" value="{{ $subject->id }}"
+                                                class="box1"></td>
                                         <td>
                                             {{ $subject->name }}
                                         </td>
-
+                                        <td>
+                                            <input type="number" name="hours_total[{{ $subject->id }}]"
+                                                class="form-control" min="0" value="0">
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

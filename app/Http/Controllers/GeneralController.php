@@ -17,6 +17,8 @@ use App\Models\Teacher;
 use App\Models\teacher_subject;
 use App\Models\Term;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Ramsey\Uuid\Rfc4122\Validator;
 
 class GeneralController extends Controller
 {
@@ -126,6 +128,10 @@ class GeneralController extends Controller
         }
         return redirect()->route('related_with_subjects', $request->teacher_id);
     }
+    function get_sections_marks_types($subjectId)
+    {
+        return view('pages.generel.section_setting.section_marks.get_section_exams_types', compact('subjectId'));
+    }
     function get_sections_exams()
     {
         $exams = Quizze::where('section_id', session()->get('section'))->get();
@@ -138,6 +144,7 @@ class GeneralController extends Controller
             $exam = new Quizze();
             $exam->name = ['en' => $request->Name_Exam_Ar, 'ar' => $request->Name_Exam_En];
             $exam->full_mark = $request->full_mark;
+            $exam->type = $request->type;
             $exam->subject_id = $request->subject_id;
             $exam->section_id = $request->section_id;
             $exam->save();
@@ -154,6 +161,7 @@ class GeneralController extends Controller
             $exam->update([
                 $exam->name = ['ar' => $request->Name_Exam_Ar, 'en' => $request->Name_Exam_En],
                 $exam->full_mark = $request->full_mark,
+                $exam->type = $request->type,
                 $exam->subject_id = $request->subject_id,
             ]);
             toastr()->success(trans('messages.Update'));
@@ -175,9 +183,161 @@ class GeneralController extends Controller
     }
     function get_sections_marks($subjectId)
     {
-        $exams = Quizze::where('subject_id', $subjectId)->get();
+        $exams = Quizze::where('subject_id', $subjectId)->where('section_id', session()->get('section'))->where('type', 'mohassalh')->get();
         $sectionStudents = Section::findOrFail(session()->get('section'))->students;
-        return view('pages.generel.section_setting.section_marks.get_section_marks', compact('exams', 'sectionStudents'));
+        return view('pages.generel.section_setting.section_marks.get_section_marks', compact('exams', 'sectionStudents', 'subjectId'));
+    }
+
+    function get_sections_marks_final1($subjectId)
+    {
+        $index = 0;
+
+        // final1 exams
+        $exams = Quizze::where('subject_id', $subjectId)
+            ->where('section_id', session()->get('section'))
+            ->where('type', 'final1')
+            ->get();
+
+        // mohassalh exams
+        $mohassalhExams = Quizze::where('subject_id', $subjectId)
+            ->where('section_id', session()->get('section'))
+            ->where('type', 'mohassalh')
+            ->get();
+
+        $sectionStudents = Section::findOrFail(session()->get('section'))->students;
+
+        // total full mark
+        $totalFullMark = $mohassalhExams->sum('full_mark');
+
+        // get subject from term pivot
+        $term = Term::findOrFail(session()->get('term'));
+
+        $subject = $term->subjects()
+            ->where('subject_id', $subjectId)
+            ->first();
+
+        // total subject hours
+        $hoursTotal = $subject->pivot->hours_total;
+
+        // 10% limit
+        $maxAbsence = $hoursTotal * 0.10;
+
+        $passedStudents = [];
+
+        foreach ($sectionStudents as $student) {
+
+            $studentTotal = 0;
+
+            // =========================
+            // Exam total
+            // =========================
+            foreach ($mohassalhExams as $exam) {
+
+                $degree = Degree::where('quizze_id', $exam->id)
+                    ->where('student_id', $student->id)
+                    ->first();
+
+                if ($degree) {
+                    $studentTotal += $degree->score;
+                }
+            }
+
+            // =========================
+            // Attendance count
+            // =========================
+            $absenceCount = Attendance::where('student_id', $student->id)
+                ->where('subject_id', $subjectId)
+                ->where('section_id', session()->get('section'))
+                ->where('state', 0) // absent
+                ->where('uther', 0) // بدون عذر
+                ->count();
+            // =========================
+            // Conditions
+            // =========================
+            $passedExam = $studentTotal >= ($totalFullMark / 2);
+
+            $attendanceAllowed = $absenceCount < $maxAbsence;
+
+            if ($passedExam && $attendanceAllowed) {
+
+                $passedStudents[$index] = $student;
+
+                $index++;
+            }
+        }
+        return view(
+            'pages.generel.section_setting.section_marks.get_section_marks_final1',
+            compact(
+                'exams',
+                'sectionStudents',
+                'subjectId',
+                'passedStudents'
+            )
+        );
+    }
+    function get_sections_marks_final2($subjectId)
+    {
+        $index = 0;
+
+        // final1 exams
+        $exams = Quizze::where('subject_id', $subjectId)
+            ->where('section_id', session()->get('section'))
+            ->where('type', 'final1')
+            ->get();
+
+        $exams2 = Quizze::where('subject_id', $subjectId)
+            ->where('section_id', session()->get('section'))
+            ->where('type', 'final2')
+            ->get();
+
+        $sectionStudents = Section::findOrFail(session()->get('section'))->students;
+
+        // total final1 full mark
+        $totalFullMark = $exams->sum('full_mark');
+
+        $passedStudents = [];
+
+        foreach ($sectionStudents as $student) {
+
+            $studentTotal = 0;
+
+            // =========================
+            // final1 total
+            // =========================
+            foreach ($exams as $exam) {
+
+                $degree = Degree::where('quizze_id', $exam->id)
+                    ->where('student_id', $student->id)
+                    ->first();
+
+                if ($degree) {
+                    $studentTotal += $degree->score;
+                }
+            }
+
+            // =========================
+            // Condition:
+            // less than 50%
+            // =========================
+            $failedExam = $studentTotal < ($totalFullMark / 2);
+
+            if ($failedExam) {
+
+                $passedStudents[$index] = $student;
+
+                $index++;
+            }
+        }
+
+        return view(
+            'pages.generel.section_setting.section_marks.get_section_marks_final2',
+            compact(
+                'exams2',
+                'sectionStudents',
+                'subjectId',
+                'passedStudents'
+            )
+        );
     }
     public function store_sections_marks(Request $request)
     {
@@ -196,7 +356,7 @@ class GeneralController extends Controller
                 }
             }
         }
-        return redirect()->route('get_sections_marks', $request->subject);
+        return redirect()->back();
     }
     // baracode store
     function baracoe()
@@ -209,10 +369,12 @@ class GeneralController extends Controller
     }
     function baracoe_store(Request $request)
     {
+        $studentId = Crypt::decryptString($request->student_id);
+        $request->merge(['student_id' => $studentId]);
         $request->validate([
             'student_id' => ['required', 'exists:students,id']
         ]);
-        $student = Student::findOrFail($request->student_id);
+        $student = Student::findOrFail($studentId);
         $collection = Setting::all();
         $setting['setting'] = $collection->flatMap(function ($collection) {
             return [$collection->key => $collection->value];
@@ -236,7 +398,7 @@ class GeneralController extends Controller
                     $sectionSubjects = ClassTable::where('section_id', $section->id)->where('lucture_day', 7)->get();
                 }
                 foreach ($sectionSubjects as $subject) {
-                    $attendance = Attendance::where('student_id', $request->student_id)
+                    $attendance = Attendance::where('student_id', $studentId)
                         ->where('section_id', $section->id)
                         ->where('subject_id', $subject->subject_id)
                         ->where('lucture_number', $subject->lucture_number)
@@ -245,7 +407,7 @@ class GeneralController extends Controller
                     if ($attendance->count() > 0) {
                     } else {
                         $newAttendance = new Attendance();
-                        $newAttendance->student_id = $request->student_id;
+                        $newAttendance->student_id = $studentId;
                         $newAttendance->section_id = $section->id;
                         $newAttendance->subject_id = $subject->subject_id;
                         $newAttendance->lucture_number = $subject->lucture_number;

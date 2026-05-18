@@ -106,6 +106,7 @@ class AttendanceController extends Controller
                 $attendance[0]->lucture_number = $request->lucture_number;
                 $attendance[0]->attendance_date = date("Y-m-d");
                 $attendance[0]->state = $state;
+                $attendance[0]->uther = $request->uther[$student_id] ?? null;
                 $attendance[0]->notes = $request->notes[$student_id];
                 $attendance[0]->save();
             } else {
@@ -116,6 +117,7 @@ class AttendanceController extends Controller
                 $newAttendance->lucture_number = $request->lucture_number;
                 $newAttendance->attendance_date = date("Y-m-d");
                 $newAttendance->state = $state;
+                $newAttendance->uther = $request->uther[$student_id] ?? null;
                 $newAttendance->notes = $request->notes[$student_id];
                 $newAttendance->save();
             }
@@ -157,6 +159,7 @@ class AttendanceController extends Controller
                 $attendance[0]->lucture_number = $request->lucture_number;
                 $attendance[0]->attendance_date = $request->date;
                 $attendance[0]->state = $state;
+                $attendance[0]->uther = $request->uther[$student_id] ?? null;
                 $attendance[0]->notes = $request->notes[$student_id];
                 $attendance[0]->save();
             } else {
@@ -167,6 +170,7 @@ class AttendanceController extends Controller
                 $newAttendance->lucture_number = $request->lucture_number;
                 $newAttendance->attendance_date = $request->date;
                 $newAttendance->state = $state;
+                $newAttendance->uther = $request->uther[$student_id] ?? null;
                 $newAttendance->notes = $request->notes[$student_id];
                 $newAttendance->save();
             }

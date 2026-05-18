@@ -35,7 +35,18 @@ class TermSubjectController extends Controller
         $request->validate([
             'subjects' => ['required']
         ]);
-        Term::findOrFail(session()->get('term'))->subjects()->attach($request->subjects);
+        $term = Term::findOrFail(session()->get('term'));
+
+        $data = [];
+
+        foreach ($request->subjects as $subjectId) {
+
+            $data[$subjectId] = [
+                'hours_total' => $request->hours_total[$subjectId] ?? 0
+            ];
+        }
+
+        $term->subjects()->attach($data);
         return redirect()->route('show_term_subjects');
     }
     function unreleatoin_term_subjects(Request $request)

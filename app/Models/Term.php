@@ -23,6 +23,6 @@ class Term extends Model
     }
     public function subjects()
     {
-        return $this->belongsToMany(Subject::class, 'term_subjects');
+        return $this->belongsToMany(Subject::class, 'term_subjects')->withPivot('hours_total');
     }
 }

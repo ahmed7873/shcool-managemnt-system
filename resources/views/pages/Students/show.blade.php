@@ -60,8 +60,14 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                @foreach ($studentFields as $field)
+                                    <div class="mb-2">
+                                        <strong>{{ $field->name }}:</strong>
+                                        {{ $field->pivot->value }}
+                                    </div>
+                                @endforeach
                                 <div style="display: flex; justify-content: center; margin-top: 50px;">
-                                    {!! DNS2D::getBarcodeHTML((string) $Student->id, 'QRCODE',10,10,'black') !!}
+                                    {!! DNS2D::getBarcodeHTML((string) $encryptedId, 'QRCODE', 5, 5, 'black') !!}
                                 </div>
                             </div>
 

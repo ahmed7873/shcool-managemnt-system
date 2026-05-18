@@ -18,6 +18,7 @@ class CreateQuizzesTable extends Migration
             $table->text('name');
             $table->foreignId('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->foreignId('section_id')->references('id')->on('sections')->onDelete('cascade');
+            $table->enum('type', ['mohassalh', 'final1', 'final2', 'final3']);
             $table->decimal('full_mark');
             $table->timestamps();
         });

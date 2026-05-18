@@ -72,6 +72,7 @@
                                     <th style="width: 50px"><input id="example-select-all" type="checkbox"
                                             onclick="CheckAll('box1', this)" /></th>
                                     <th>المادة</th>
+                                    <th>الساعات الفعلية</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,6 +83,9 @@
                                                 class="box1"></td>
                                         <td>
                                             {{ $subject->name }}
+                                        </td>
+                                        <td>
+                                            {{ $subject->pivot->hours_total }}
                                         </td>
                                     </tr>
                                 @endforeach

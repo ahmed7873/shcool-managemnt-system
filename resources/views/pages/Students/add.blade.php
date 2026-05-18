@@ -29,8 +29,7 @@
                     </div>
                 @endif
 
-                <form method="post" action="{{ route('Students.store') }}" autocomplete="on"
-                    enctype="multipart/form-data">
+                <form method="post" action="{{ route('Students.store') }}" autocomplete="on" enctype="multipart/form-data">
                     @csrf
                     <h6 style="font-family: 'Cairo', sans-serif;color: blue">
                         {{ trans('Students_trans.personal_information') }}</h6><br>
@@ -75,11 +74,8 @@
                                 <select class="custom-select mr-sm-2" name="gender_id">
                                     <option selected disabled>{{ trans('Parent_trans.Choose') }}...</option>
                                     @foreach ($Genders as $Gender)
-                                        <option
-                                        @if (old('gender_id') == $Gender->id)
-                                            selected
-                                        @endif
-                                        value="{{ $Gender->id }}">{{ $Gender->Name }}</option>
+                                        <option @if (old('gender_id') == $Gender->id) selected @endif
+                                            value="{{ $Gender->id }}">{{ $Gender->Name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -92,11 +88,8 @@
                                 <select class="custom-select mr-sm-2" name="nationalitie_id">
                                     <option selected disabled>{{ trans('Parent_trans.Choose') }}...</option>
                                     @foreach ($nationals as $nal)
-                                        <option
-                                        @if (old('nationalitie_id') == $nal->id)
-                                            selected
-                                        @endif
-                                        value="{{ $nal->id }}">{{ $nal->Name }}</option>
+                                        <option @if (old('nationalitie_id') == $nal->id) selected @endif
+                                            value="{{ $nal->id }}">{{ $nal->Name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -108,11 +101,8 @@
                                 <select class="custom-select mr-sm-2" name="blood_id">
                                     <option selected disabled>{{ trans('Parent_trans.Choose') }}...</option>
                                     @foreach ($bloods as $bg)
-                                        <option 
-                                         @if (old('blood_id') == $bg->id)
-                                            selected
-                                        @endif
-                                        value="{{ $bg->id }}">{{ $bg->Name }}</option>
+                                        <option @if (old('blood_id') == $bg->id) selected @endif
+                                            value="{{ $bg->id }}">{{ $bg->Name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -121,8 +111,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>{{ trans('Students_trans.Date_of_Birth') }} :</label>
-                                <input value="{{ old('Date_Birth') }}" class="form-control" type="text" id="datepicker-action" name="Date_Birth"
-                                    data-date-format="yyyy-mm-dd">
+                                <input value="{{ old('Date_Birth') }}" class="form-control" type="text"
+                                    id="datepicker-action" name="Date_Birth" data-date-format="yyyy-mm-dd">
                             </div>
                         </div>
 
@@ -138,11 +128,8 @@
                                 <select class="custom-select mr-sm-2" name="academic_year_id">
                                     <option selected disabled>اختر السنة...</option>
                                     @foreach ($academicYears as $academicYear)
-                                        <option
-                                        @if (old('academic_year_id') == $academicYear->id)
-                                            selected
-                                        @endif
-                                        value="{{ $academicYear->id }}">{{ $academicYear->academicyear }}
+                                        <option @if (old('academic_year_id') == $academicYear->id) selected @endif
+                                            value="{{ $academicYear->id }}">{{ $academicYear->academicyear }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -156,23 +143,32 @@
                                 <select class="custom-select mr-sm-2" name="parent_id">
                                     <option selected disabled>{{ trans('Parent_trans.Choose') }}...</option>
                                     @foreach ($parents as $parent)
-                                        <option
-                                        @if (old('parent_id') == $parent->id)
-                                            selected
-                                        @endif
-                                        value="{{ $parent->id }}">{{ $parent->Name_Father }}</option>
+                                        <option @if (old('parent_id') == $parent->id) selected @endif
+                                            value="{{ $parent->id }}">{{ $parent->Name_Father }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>رقم القيد <span
-                                        class="text-danger">*</span></label>
+                                <label>رقم القيد <span class="text-danger">*</span></label>
                                 <input value="{{ old('no_know') }}" type="text" name="no_know" class="form-control">
                             </div>
                         </div>
                     </div>
+
+                    @foreach ($fields as $field)
+                        <div class="mb-3">
+
+                            <label>{{ $field->name }}</label>
+
+                            <input type="{{ $field->type }}" name="dynamic_fields[{{ $field->id }}]"
+                                class="form-control"
+                                value="{{ old('dynamic_fields.' . $field->id, $studentFields[$field->id] ?? '') }}"
+                                {{ $field->is_required ? 'required' : '' }}>
+
+                        </div>
+                    @endforeach
 
                     <br>
 

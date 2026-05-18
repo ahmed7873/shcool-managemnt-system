@@ -55,6 +55,10 @@
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                             <a class="dropdown-item"
+                                                                href="{{ route('student_report', $student->id) }}"><i
+                                                                    style="color: #ffc107"
+                                                                    class="far fa-eye "></i>&nbsp; تقرير</a>
+                                                            <a class="dropdown-item"
                                                                 href="{{ route('Students.show', $student->id) }}"><i
                                                                     style="color: #ffc107"
                                                                     class="far fa-eye "></i>&nbsp; عرض بيانات الطالب</a>

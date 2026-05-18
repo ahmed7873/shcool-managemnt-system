@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\AcademicYearController;
 use App\Http\Controllers\ClassTableController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\Students\AttendanceController;
 use App\Http\Controllers\Students\FeesInvoicesController;
 use App\Http\Controllers\Students\ReceiptStudentsController;
+use App\Http\Controllers\Students\StudentController;
+use App\Http\Controllers\TeacherAttendenceController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TermSubjectController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +45,12 @@ Route::group(
         'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth']
     ],
     function () {
+        Route::resource('dynamicFeilds', 'FieldController');
+
+        //routes for attendence teachers
+        Route::get('createAttendenceTeachers/{date?}', [TeacherAttendenceController::class, 'createAttendenceTeachers'])->name('createAttendenceTeachers');
+        Route::post('saveAttendenceTeachers', [TeacherAttendenceController::class, 'saveAttendenceTeachers'])->name('saveAttendenceTeachers');
+        Route::post('teacherAttendenceDelete', [TeacherAttendenceController::class, 'teacherAttendenceDelete'])->name('teacherAttendenceDelete');
 
         //==============================dashboard============================
         Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
@@ -54,6 +63,7 @@ Route::group(
         Route::group([
             'middleware' => ['CheckAcademicYeay']
         ], function () {
+
             Route::get('/show_terms/{classroom}', [GeneralController::class, 'show_terms'])->name('show_terms');
             Route::get('/show_sections/{term}', [GeneralController::class, 'show_sections'])->name('show_sections');
             Route::get('/show_sections_settings/{section}', [GeneralController::class, 'show_sections_settings'])->name('show_sections_settings');
@@ -71,8 +81,11 @@ Route::group(
             Route::post('/save_class_tabel', [ClassTableController::class, 'save_class_tabel'])->name('save_class_tabel');
 
             //==============================section marks============================
+            Route::get('/get_sections_marks_types/{subjectId}', [GeneralController::class, 'get_sections_marks_types'])->name('get_sections_marks_types');
             Route::get('/show_section_subjects', [GeneralController::class, 'show_section_subjects'])->name('show_section_subjects');
             Route::get('/get_sections_marks/{subjectId}', [GeneralController::class, 'get_sections_marks'])->name('get_sections_marks');
+            Route::get('/get_sections_marks_final1/{subjectId}', [GeneralController::class, 'get_sections_marks_final1'])->name('get_sections_marks_final1');
+            Route::get('/get_sections_marks_final2/{subjectId}', [GeneralController::class, 'get_sections_marks_final2'])->name('get_sections_marks_final2');
             Route::post('/store_sections_marks', [GeneralController::class, 'store_sections_marks'])->name('store_sections_marks');
 
             //==============================section exams============================
@@ -148,6 +161,19 @@ Route::group(
 
         //==============================Students============================
         Route::group(['namespace' => 'Students'], function () {
+            Route::get('student_report/{id}', [StudentController::class, 'student_report'])->name('student_report');
+            Route::get('section_marks_report', [StudentController::class, 'section_marks_report_select'])->name('section_marks_report');
+            Route::post('section_marks_report', [StudentController::class, 'section_marks_report_show'])->name('section_marks_report.show');
+            Route::get('section_marks_custom_report', [StudentController::class, 'section_marks_custom_report_select'])->name('section_marks_custom_report');
+            Route::post('section_marks_custom_report', [StudentController::class, 'section_marks_custom_report_show'])->name('section_marks_custom_report.show');
+            Route::get('section_marks_appreciation_report', [StudentController::class, 'section_marks_appreciation_report_select'])->name('section_marks_appreciation_report');
+            Route::post('section_marks_appreciation_report', [StudentController::class, 'section_marks_appreciation_report_show'])->name('section_marks_appreciation_report.show');
+            Route::get('section_marks_appreciation2_report', [StudentController::class, 'section_marks_appreciation2_report_select'])->name('section_marks_appreciation2_report');
+            Route::post('section_marks_appreciation2_report', [StudentController::class, 'section_marks_appreciation2_report_show'])->name('section_marks_appreciation2_report.show');
+            Route::get('section_marks_appreciation3_report', [StudentController::class, 'section_marks_appreciation3_report_select'])->name('section_marks_appreciation3_report');
+            Route::post('section_marks_appreciation3_report', [StudentController::class, 'section_marks_appreciation3_report_show'])->name('section_marks_appreciation3_report.show');
+            Route::get('get_terms/{academicyear_id}/{classroom_id}', [StudentController::class, 'get_terms'])->name('get_terms');
+            Route::get('get_sections_by_term/{term_id}', [StudentController::class, 'get_sections_by_term'])->name('get_sections_by_term');
             Route::resource('Students', 'StudentController');
             Route::resource('online_classes', 'OnlineClasseController');
             Route::get('indirect_admin', 'OnlineClasseController@indirectCreate')->name('indirect.create.admin');

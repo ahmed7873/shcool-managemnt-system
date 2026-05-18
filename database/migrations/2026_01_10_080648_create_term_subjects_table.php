@@ -19,6 +19,7 @@ class CreateTermSubjectsTable extends Migration
             $table->foreign('term_id')->references('id')->on('terms')->cascadeOnDelete();
             $table->unsignedBigInteger('subject_id');
             $table->foreign('subject_id')->references('id')->on('subjects')->cascadeOnDelete();
+            $table->integer('hours_total')->default(0);
             $table->timestamps();
         });
     }
